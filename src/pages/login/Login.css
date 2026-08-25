@@ -1,0 +1,152 @@
+/* =========================================================
+   LOGIN / REGISTER — mesmo tema "arcade de moeda" do Clicker
+   Paleta: pinheiro escuro + dourado (moeda) + coral (destaque)
+   Tipografia: Baloo 2 (display) + Space Mono (corpo/inputs)
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #0f3d3e;
+  --bg-deep: #08201f;
+  --panel: #123f40;
+  --gold: #ffb627;
+  --coral: #ff5d5d;
+  --cream: #f4f1e8;
+  --ring: rgba(255, 182, 39, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, var(--panel) 0%, var(--bg) 55%, var(--bg-deep) 100%);
+  color: var(--cream);
+  font-family: 'Space Mono', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.content {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 32px 24px 28px;
+  background: var(--panel);
+  border: 3px solid var(--bg-deep);
+  border-radius: 28px;
+  box-shadow:
+    0 10px 0 var(--bg-deep),
+    0 18px 30px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+/* ---------- Título implícito (primeiro label vira "cabeçalho" visual) ---------- */
+
+.content form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------- Campos ---------- */
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--cream);
+  opacity: 0.85;
+  width: 100%;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+
+input[type='text'] {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--bg-deep);
+  background: var(--bg-deep);
+  color: var(--cream);
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type='text']::placeholder {
+  color: var(--cream);
+  opacity: 0.35;
+}
+
+input[type='text']:focus-visible {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+/* ---------- Frase de alternância (login <-> registro) ---------- */
+
+.content form p {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--coral);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Span clicável "Login" / "Registrar" ---------- */
+
+.link-span {
+  color: var(--gold);
+  cursor: pointer;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.link-span:hover {
+  color: var(--cream);
+  text-decoration-color: var(--gold);
+}
+
+.link-span:active {
+  transform: scale(0.97);
+}
+
+hr, br {
+  display: none;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 420px) {
+  .content {
+    max-width: 100%;
+    padding: 26px 18px 22px;
+    border-radius: 22px;
+    gap: 14px;
+  }
+}
+
+/* respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .link-span {
+    transition: none;
+  }
+}
