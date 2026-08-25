@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route } from "react-router-dom"
-import Clicker from "./Clicker"
+import Clicker from "./pages/clicker/Clicker"
 
 export default function App() {
     return (

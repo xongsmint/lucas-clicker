@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import lucas from './assets/lukinhas.png'
+import lucas from '../../assets/lukinhas.png'
 import './Clicker.css'
 
 export default function Clicker() {
@@ -44,7 +44,7 @@ export default function Clicker() {
 
     return (
         <div className="content">
-            <h1>Lucas Clicker</h1>
+            <h1>Lukinhas Clicker</h1>
             <img
                 src={lucas}
                 alt="Lucas"
@@ -55,15 +55,15 @@ export default function Clicker() {
             <br />
             <p>Clicks: {counter}</p>
             <p>Click multiplier: {multiplier}</p>
-            <label>
+            {/* <label>
                 Set manually:
                 <input disabled type="number" onChange={(e) => setCounter(e.target.value)} />
-            </label>
+            </label> */}
             <pre
                 id='share'
                 style={{ cursor: "pointer" }}
                 onClick={async () => {
-                    await copiar("none")
+                    await copiar("https://xongsmint.github.io/lucas-clicker/")
                 }}
             >COMPARTILHE COM AMIGOS</pre>
         </div>
