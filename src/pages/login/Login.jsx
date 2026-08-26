@@ -23,6 +23,7 @@ export default function Login() {
                         <input
                             type="text"
                             placeholder="Seu nome aqui..."
+                            maxLength={24}
                             onChange={(e) => setFirstname(e.target.value)}
                         />
                     </label>
@@ -30,26 +31,33 @@ export default function Login() {
                         Sobrenome:
                         <input
                             type="text"
+                            maxLength={32}
                             placeholder="Seu sobrenome aqui..."
                             onChange={(e) => setLastName(e.target.value)}
                         />
                     </label>
                     <label>
-                        Nome de usuário:
+                        Nome de usuário *máx 16 caracteres e somente letras:
                         <input
                             type="text"
                             maxLength={16}
                             placeholder="Digite seu username..."
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => {
+                                const novoValor = e.target.value.replace(/[^a-zA-Z]/g, '')
+                                setUsername(novoValor)
+                            }}
                         />
                     </label>
                     <label>
-                        Senha *máx 8 caracteres e somente letras e numeros:
+                        Senha *máx 8 caracteres e somente letras e números:
                         <input
                             type="text"
                             placeholder="Digite sua senha..."
                             maxLength={8}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                const novoValor = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
+                                setPassword(novoValor)
+                            }}
                         />
                     </label>
 

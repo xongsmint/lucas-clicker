@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import lucas from '../../assets/lukinhas.png'
 import { useNavigate } from 'react-router-dom'
-import Cookies from 'js-cookie'
 import './Clicker.css'
 
 export default function Clicker() {
