@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Login.css'
 
 export default function Login() {
@@ -7,10 +8,14 @@ export default function Login() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    let navigate = useNavigate()
+
     const [alrHaveAcc, setAlrHaveAcc] = useState(false)
 
     return (
         <div className="content">
+            <p className='back' onClick={() => navigate("/")}>voltar</p>
+
             {alrHaveAcc ? (
                 <form>
                     <label>

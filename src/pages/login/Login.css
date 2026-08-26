@@ -133,6 +133,14 @@ hr, br {
   display: none;
 }
 
+.back {
+  align-self: flex-start;
+  margin: -15px 0 0;
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+}
+
 /* ---------- Mobile ---------- */
 
 @media (max-width: 420px) {
