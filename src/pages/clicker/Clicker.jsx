@@ -1,13 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import lucas from '../../assets/lukinhas.png'
 import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 import './Clicker.css'
 
 export default function Clicker() {
     const [counter, setCounter] = useState(0)
     const [multiplier, setMultiplier] = useState(1)
     const [menuOpen, setMenuOpen] = useState(false)
-    let navigate = useNavigate()
+    const [userLogged, setUserLogged] = useState(false)
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (Cookies.get("accessToken")) {
+            setUserLogged(true)
+        }
+    }, [])
 
     const increment = () => {
         setCounter(prev => prev + Math.floor(1 * multiplier))
@@ -44,6 +53,7 @@ export default function Clicker() {
                 <nav className={`menu-dropdown ${menuOpen ? 'show' : ''}`}>
                     <span className="link-span" onClick={() => goTo("/login")}>LOGIN</span>
                     <span className="link-span" onClick={() => goTo("/join-group")}>ENTRAR EM GRUPO</span>
+                    {userLogged ? <span className="link-span" onClick={() => goTo("/perfil")}>PERFIL</span> : ""}
                 </nav>
             </header>
 

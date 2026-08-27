@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react"
+import Cookies from "js-cookie"
+import { useNavigate } from "react-router-dom"
 
 export default function Logar() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+
+    const navigate = useNavigate()
 
     const apiUrl = import.meta.env.VITE_DATABASE_URL
 
@@ -10,6 +14,7 @@ export default function Logar() {
         e.preventDefault()
 
         try {
+            console.log("requesting")
             const response = await fetch(apiUrl + "/login", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
@@ -18,9 +23,14 @@ export default function Logar() {
                     password: password
                 })
             })
+            console.log("requested")
 
-            const data = await response.json()
-            console.log(data)
+            if (response.ok) {
+                const data = await response.json()
+                Cookies.set('accessToken', data.access_token)
+                console.log(Cookies.get('accessToken'))
+                navigate("/")
+            }
         } catch(err) {
             alert(`Error: ${err}`)
         }
@@ -57,8 +67,6 @@ export default function Logar() {
             
             <button
                 type="submit">ENTRAR</button>
-
-            <p>Ainda não tem conta? <span className="link-span" onClick={() => setAlrHaveAcc(true)}>Registrar</span></p>
         </form>
     )
 }
