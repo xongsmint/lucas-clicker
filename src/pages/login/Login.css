@@ -141,6 +141,60 @@ hr, br {
   font-family: 'Space Mono', monospace;
 }
 
+/* ---------- Botão de submit ---------- */
+
+button[type='submit'],
+input[type='submit'] {
+  width: 100%;
+  margin-top: 4px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 14px;
+  background: var(--gold);
+  color: var(--bg-deep);
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #b8790f;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+}
+
+button[type='submit']:hover,
+input[type='submit']:hover {
+  background: #ffc85c;
+}
+
+button[type='submit']:active,
+input[type='submit']:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #b8790f;
+}
+
+button[type='submit']:focus-visible,
+input[type='submit']:focus-visible {
+  outline: none;
+  box-shadow: 0 5px 0 #b8790f, 0 0 0 4px var(--ring);
+}
+
+button[type='submit']:disabled,
+input[type='submit']:disabled {
+  background: #7a7a6f;
+  box-shadow: 0 5px 0 #5c5c53;
+  color: var(--cream);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button[type='submit'],
+  input[type='submit'] {
+    transition: none;
+  }
+}
+
 /* ---------- Mobile ---------- */
 
 @media (max-width: 420px) {
