@@ -1,0 +1,17 @@
+/* =========================================================
+   REGISTER — extensão de Login.css
+   Não redeclara :root, label, input, button, form — isso já
+   vem de Login.css, carregado via Login.jsx.
+   Aqui só entram regras específicas do formulário de registro.
+   ========================================================= */
+
+.name-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.name-row label {
+  flex: 1;
+  min-width: 0; /* evita overflow do input dentro do flex item */
+}

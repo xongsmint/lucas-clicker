@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Logar from './components/login'
 import Register from './components/register'
@@ -12,6 +12,13 @@ export default function Login() {
     const [password, setPassword] = useState("")
 
     let navigate = useNavigate()
+
+    useEffect(() => {
+        if (Cookies.get("accessToken")) {
+            navigate("/")
+            alert("Você já está conectado!")
+        }
+    }, [])
 
     const [alrHaveAcc, setAlrHaveAcc] = useState(false)
 

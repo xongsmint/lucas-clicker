@@ -1,0 +1,99 @@
+/* =========================================================
+   PROFILE — mesmo tema "arcade de moeda" do Login/Register
+   Reaproveita os tokens de cor/tipografia definidos globalmente:
+   --bg, --bg-deep, --panel, --gold, --coral, --cream, --ring
+   ========================================================= */
+
+.profile-card {
+  gap: 20px;
+}
+
+/* ---------- Avatar em forma de moeda ---------- */
+
+.profile-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--bg-deep);
+  background: radial-gradient(circle at 35% 30%, #ffd77a 0%, var(--gold) 55%, #b8790f 100%);
+  border: 3px solid var(--bg-deep);
+  box-shadow:
+    0 4px 0 #b8790f,
+    inset 0 0 0 3px rgba(244, 241, 232, 0.25);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Saudação ---------- */
+
+.profile-greeting {
+  margin: 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  color: var(--cream);
+}
+
+.profile-name {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Estados de carregamento / erro ---------- */
+
+.profile-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cream);
+  opacity: 0.75;
+}
+
+.profile-status--error {
+  color: var(--coral);
+  opacity: 1;
+  font-weight: 700;
+}
+
+.coin-spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 4px solid var(--bg-deep);
+  border-top-color: var(--gold);
+  animation: coin-spin 0.9s linear infinite;
+}
+
+@keyframes coin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.profile-error-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--cream);
+  background: var(--coral);
+  border: 3px solid var(--bg-deep);
+  box-shadow: 0 4px 0 #b03d3d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coin-spinner {
+    animation: none;
+    border-top-color: var(--bg-deep);
+  }
+}
