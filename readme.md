@@ -1,1 +1,1 @@
-[CLICK](https://xongsmint.github.io/lucas-clicker/
+[CLICK](https://xongsmint.github.io/lucas-clicker/)
