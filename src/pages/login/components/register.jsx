@@ -9,15 +9,34 @@ export default function Register({ apiUrl }) {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const [isComposing, setIsComposing] = useState(false)
 
     const navigate = useNavigate()
+
+    // Enquanto o navegador está "compondo" um caractere acentuado
+    // (dead key + letra, ex: ´ + a = á), deixamos o valor passar sem
+    // filtrar. Só aplicamos o regex quando a composição termina.
+    const makeNameHandler = (setter) => ({
+        onChange: (e) => {
+            if (isComposing) {
+                setter(e.target.value)
+                return
+            }
+            setter(e.target.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s]/g, ''))
+        },
+        onCompositionStart: () => setIsComposing(true),
+        onCompositionEnd: (e) => {
+            setIsComposing(false)
+            setter(e.target.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s]/g, ''))
+        }
+    })
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         try {
             setIsLoading(true)
-            
+
             const response = await fetch(apiUrl + "/users", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
@@ -38,6 +57,8 @@ export default function Register({ apiUrl }) {
             }
         } catch (err) {
             alert(`Error: ${err}`)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -51,10 +72,8 @@ export default function Register({ apiUrl }) {
                         placeholder="Nome..."
                         minLength={2}
                         maxLength={20}
-                        onChange={(e) => {
-                            const onlyLetters = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-                            setFirstName(onlyLetters)
-                        }}
+                        value={firstName}
+                        {...makeNameHandler(setFirstName)}
                         required
                     />
                 </label>
@@ -65,10 +84,8 @@ export default function Register({ apiUrl }) {
                         placeholder="Sobrenome..."
                         minLength={2}
                         maxLength={20}
-                        onChange={(e) => {
-                            const onlyLetters = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-                            setLastName(onlyLetters)
-                        }}
+                        value={lastName}
+                        {...makeNameHandler(setLastName)}
                         required
                     />
                 </label>
@@ -81,8 +98,9 @@ export default function Register({ apiUrl }) {
                     placeholder="Digite seu nome de usuário..."
                     minLength={5}
                     maxLength={16}
+                    value={username}
                     onChange={(e) => {
-                        const onlyLetters = e.target.value.replace(/[^a-zA-Z\s]/g, '')
+                        const onlyLetters = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                         setUsername(onlyLetters)
                     }}
                     required
@@ -95,6 +113,7 @@ export default function Register({ apiUrl }) {
                     placeholder="Digite sua senha..."
                     minLength={6}
                     maxLength={8}
+                    value={password}
                     onChange={(e) => {
                         const alphanumeric = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                         setPassword(alphanumeric)

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Ranking.css'
 
-export default function Ranking({ apiUrl, onBack }) {
+export default function Ranking({ apiUrl }) {
   const [players, setPlayers] = useState([])
   const [status, setStatus] = useState('loading') // 'loading' | 'ok' | 'error'
+  const navigate = useNavigate()
 
   useEffect(() => {
     let cancelled = false
@@ -38,18 +40,16 @@ export default function Ranking({ apiUrl, onBack }) {
 
   const fullName = (player) => {
     const name = [player.first_name, player.last_name].filter(Boolean).join(' ').trim()
-    return name || player.username || 'Jogador'
+    return name || 'Jogador'
   }
 
   return (
     <div className="ranking-page">
       <div className="ranking-card">
         <div className="ranking-header">
-          {onBack && (
-            <button className="back-btn" onClick={onBack} aria-label="Voltar">
-              ←
-            </button>
-          )}
+          <button className="back-btn" onClick={() => navigate('/')} aria-label="Voltar">
+            ←
+          </button>
           <h1>RANKING</h1>
           <span className="subtitle">Top 5 cliques</span>
         </div>
@@ -81,7 +81,6 @@ export default function Ranking({ apiUrl, onBack }) {
 
                 <span className="ranking-info">
                   <span className="ranking-name">{fullName(player)}</span>
-                  <span className="ranking-username">@{player.username}</span>
                 </span>
 
                 <span className="ranking-clicks">

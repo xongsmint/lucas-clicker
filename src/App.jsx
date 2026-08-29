@@ -14,7 +14,7 @@ export default function App() {
                 <Route path="/" element={<Clicker apiUrl={apiUrl} />} />
                 <Route path="/login" element={<Login  />} />
                 <Route path="/perfil" element={<Profile apiUrl={apiUrl} />} />
-                <Route path="/ranking" element={<Ranking apiUrl={apiUrl} onBack={() => setView('clicker')} />} />
+                <Route path="/ranking" element={<Ranking apiUrl={apiUrl} />} />
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
         </HashRouter>
