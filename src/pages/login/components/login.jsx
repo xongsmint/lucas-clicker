@@ -2,14 +2,12 @@ import { useState, useEffect } from "react"
 import Cookies from "js-cookie"
 import { useNavigate } from "react-router-dom"
 
-export default function Logar() {
+export default function Logar({ apiUrl }) {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
-
-    const apiUrl = import.meta.env.VITE_DATABASE_URL
 
     const handleSubmit = async (e) => {
         e.preventDefault()

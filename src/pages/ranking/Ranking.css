@@ -1,0 +1,292 @@
+/* =========================================================
+   RANKING — extensão do tema "arcade de moeda" do Clicker
+   Reaproveita a mesma paleta e tipografia do Clicker.css
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #0f3d3e;
+  --bg-deep: #08201f;
+  --panel: #123f40;
+  --gold: #ffb627;
+  --silver: #cfd8dc;
+  --bronze: #d98a4a;
+  --coral: #ff5d5d;
+  --cream: #f4f1e8;
+  --ring: rgba(255, 182, 39, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ranking-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 0%, var(--panel) 0%, var(--bg) 55%, var(--bg-deep) 100%);
+  font-family: 'Space Mono', monospace;
+  color: var(--cream);
+}
+
+.ranking-card {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 22px 26px;
+  background: var(--panel);
+  border: 3px solid var(--bg-deep);
+  border-radius: 28px;
+  box-shadow:
+    0 10px 0 var(--bg-deep),
+    0 18px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Header ---------- */
+
+.ranking-header {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.ranking-header h1 {
+  grid-column: 2;
+  margin: 0;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  text-shadow: 0 3px 0 var(--bg-deep);
+  text-align: center;
+}
+
+.ranking-header .subtitle {
+  grid-column: 2;
+  font-size: 0.8rem;
+  color: var(--coral);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.back-btn {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-deep);
+  border: 2px solid var(--gold);
+  border-radius: 10px;
+  color: var(--cream);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.back-btn:hover {
+  background: var(--gold);
+  color: var(--bg-deep);
+}
+
+.back-btn:active {
+  transform: scale(0.92);
+}
+
+/* ---------- Estados (loading / erro / vazio) ---------- */
+
+.ranking-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 8px;
+  text-align: center;
+}
+
+.ranking-state p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.error-text {
+  color: var(--coral);
+  font-weight: 700;
+}
+
+.coin-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 4px solid var(--bg-deep);
+  box-shadow: 0 0 0 4px var(--ring);
+  animation: coin-flip 1s ease-in-out infinite;
+}
+
+@keyframes coin-flip {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.1); }
+}
+
+/* ---------- Lista ---------- */
+
+.ranking-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--bg-deep);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.ranking-row:hover {
+  border-color: var(--ring);
+  transform: translateX(2px);
+}
+
+/* medalha / posição */
+
+.medal {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 2px solid var(--bg-deep);
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--cream);
+}
+
+.medal-gold {
+  background: var(--gold);
+  color: var(--bg-deep);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px var(--ring);
+}
+
+.medal-silver {
+  background: var(--silver);
+  color: var(--bg-deep);
+  border-color: var(--silver);
+}
+
+.medal-bronze {
+  background: var(--bronze);
+  color: var(--bg-deep);
+  border-color: var(--bronze);
+}
+
+/* nome / username */
+
+.ranking-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.ranking-name {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ranking-username {
+  font-size: 0.72rem;
+  color: var(--gold);
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* cliques */
+
+.ranking-clicks {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--coral);
+}
+
+.clicks-label {
+  font-size: 0.62rem;
+  font-weight: 400;
+  color: var(--cream);
+  opacity: 0.6;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 420px) {
+  .ranking-card {
+    max-width: 100%;
+    padding: 22px 16px 20px;
+    border-radius: 22px;
+  }
+
+  .ranking-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .ranking-row {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .medal {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coin-spinner {
+    animation: none;
+  }
+}

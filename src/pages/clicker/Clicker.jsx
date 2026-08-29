@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import './Clicker.css'
 
-export default function Clicker() {
+export default function Clicker({ apiUrl }) {
     const pendingRef = useRef(0)
 
     const [clicks, setClicks] = useState(0)
@@ -17,7 +17,6 @@ export default function Clicker() {
     const [error, setError] = useState(null)
 
     const navigate = useNavigate()
-    const apiUrl = import.meta.env.VITE_DATABASE_URL
 
     // CHECK IF LOGGED AND FETCH CLICKS AND MULTIPLIER AT START
     useEffect(() => {

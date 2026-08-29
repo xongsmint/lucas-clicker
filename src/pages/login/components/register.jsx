@@ -3,7 +3,7 @@ import Cookies from "js-cookie"
 import { useNavigate } from "react-router-dom"
 import './registrar.css'
 
-export default function Register() {
+export default function Register({ apiUrl }) {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [username, setUsername] = useState("")
@@ -11,8 +11,6 @@ export default function Register() {
     const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
-
-    const apiUrl = import.meta.env.VITE_DATABASE_URL
 
     const handleSubmit = async (e) => {
         e.preventDefault()

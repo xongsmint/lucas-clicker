@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom"
 import Cookies from "js-cookie"
 import "./profile.css"
 
-export default function Profile() {
+export default function Profile({ apiUrl }) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
 
     const navigate = useNavigate()
-    const apiUrl = import.meta.env.VITE_DATABASE_URL
 
     useEffect(() => {
         const controller = new AbortController()

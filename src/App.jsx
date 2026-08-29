@@ -3,14 +3,18 @@ import Clicker from "./pages/clicker/Clicker"
 import Login from "./pages/login/Login"
 import PageNotFound from "./pages/pagenotfound/PageNotFound"
 import Profile from "./pages/profile/Profile"
+import Ranking from "./pages/ranking/Ranking"
 
 export default function App() {
+    const apiUrl = import.meta.env.VITE_DATABASE_URL
+
     return (
         <HashRouter>
             <Routes>
-                <Route path="/" element={<Clicker />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/perfil" element={<Profile />} />
+                <Route path="/" element={<Clicker apiUrl={apiUrl} />} />
+                <Route path="/login" element={<Login  />} />
+                <Route path="/perfil" element={<Profile apiUrl={apiUrl} />} />
+                <Route path="/ranking" element={<Ranking apiUrl={apiUrl} onBack={() => setView('clicker')} />} />
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
         </HashRouter>
