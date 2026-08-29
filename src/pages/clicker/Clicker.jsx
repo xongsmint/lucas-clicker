@@ -4,11 +4,27 @@ import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import './Clicker.css'
 
+const FABIO_TIMEOUT_KEY = "fabioTimeoutUntil"
+
+function getTomorrowMidnight() {
+    const d = new Date()
+    d.setDate(d.getDate() + 1)
+    d.setHours(0, 0, 0, 0)
+    return d.getTime()
+}
+
+function isFabioTimedOut() {
+    const until = localStorage.getItem(FABIO_TIMEOUT_KEY)
+    if (!until) return false
+    return Number(until) > Date.now()
+}
+
 export default function Clicker({ apiUrl }) {
     const pendingRef = useRef(0)
 
     const [clicks, setClicks] = useState(0)
     const [multiplier, setMultiplier] = useState(1)
+    const [username, setUsername] = useState(null)
 
     const [menuOpen, setMenuOpen] = useState(false)
     const [userLogged, setUserLogged] = useState(false)
@@ -58,6 +74,54 @@ export default function Clicker({ apiUrl }) {
         return () => controller.abort()
     }, [apiUrl])
 
+    // FETCH PROFILE (to know who's logged in)
+    useEffect(() => {
+        const accessToken = Cookies.get("accessToken")
+        if (!accessToken) return
+
+        const controller = new AbortController()
+
+        async function fetchProfile() {
+            try {
+                const response = await fetch(apiUrl + "/profile", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    signal: controller.signal
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`)
+                }
+
+                const json = await response.json()
+                setUsername(json.username)
+            } catch (err) {
+                if (err.name !== "AbortError") {
+                    setError(err)
+                }
+            }
+        }
+
+        fetchProfile()
+
+        return () => controller.abort()
+    }, [apiUrl])
+
+    // TIMEOUT FABIO (só dispara uma vez, quando ainda não tem punição ativa)
+    useEffect(() => {
+        if (username !== "fabio") return
+        if (isFabioTimedOut()) return // já está de castigo, não repete o alert
+
+        const until = getTomorrowMidnight()
+        localStorage.setItem(FABIO_TIMEOUT_KEY, String(until))
+
+        alert("sem apelar fabio")
+        window.location.reload()
+    }, [username])
+
     // PERIODICALLY FLUSH PENDING CLICKS TO THE SERVER
     useEffect(() => {
         if (!userLogged) return
@@ -92,8 +156,10 @@ export default function Clicker({ apiUrl }) {
     }, [apiUrl, userLogged])
 
     const increment = () => {
-        pendingRef.current += 1 * multiplier // pendente de envio ao servidor
-        setClicks(prev => prev + (1 * multiplier)) // total exibido na tela
+        if (username === "fabio" && isFabioTimedOut()) return // bloqueado até amanhã
+
+        pendingRef.current += 1 * multiplier
+        setClicks(prev => prev + (1 * multiplier))
     }
 
     const copiar = async (text) => {
@@ -143,6 +209,7 @@ export default function Clicker({ apiUrl }) {
             <p>Clicks: {loading ? "-" : clicks}</p>
             <p>Click multiplier: {loading ? "-" : multiplier}</p>
             {userLogged ? "" : <p>Você não está logado! Jogar sem conta faz você correr o risco de perder os cliques e bloqueia os sistemas de skins e skills.</p>}
+            {username === "fabio" && isFabioTimedOut() ? <p style={{ color: "red" }}>Você está de castigo até amanhã 😤</p> : ""}
             {error ? <p style={{ color: "red" }}>Erro ao sincronizar: {error.message}</p> : ""}
 
             <pre
