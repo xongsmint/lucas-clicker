@@ -83,11 +83,8 @@ export default function Clicker() {
                     throw new Error(`Request failed with status ${response.status}`)
                 }
 
-                // só zera o que foi de fato confirmado pelo servidor;
-                // se o usuário clicou mais durante o fetch, isso não se perde
                 pendingRef.current -= increment
             } catch (err) {
-                // mantém pendingRef intacto para tentar de novo no próximo tick
                 setError(err)
             }
         }, 10_000) // 10s
@@ -130,8 +127,8 @@ export default function Clicker() {
 
                 <nav className={`menu-dropdown ${menuOpen ? 'show' : ''}`}>
                     {userLogged ? "" : <span className="link-span" onClick={() => goTo("/login")}>LOGIN</span>}
-                    {userLogged ? <span className="link-span" onClick={() => goTo("/join-group")}>ENTRAR EM GRUPO</span> : ""}
                     {userLogged ? <span className="link-span" onClick={() => goTo("/perfil")}>PERFIL</span> : ""}
+                    <span className="link-span" onClick={() => goTo("/ranking")}>RANKING</span>
                 </nav>
             </header>
 
