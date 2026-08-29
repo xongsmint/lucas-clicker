@@ -5,7 +5,7 @@ import Register from './components/register'
 import Cookies from 'js-cookie'
 import './Login.css'
 
-export default function Login() {
+export default function Login({ apiUrl }) {
     let navigate = useNavigate()
 
     useEffect(() => {
@@ -23,12 +23,12 @@ export default function Login() {
 
             {alrHaveAcc ? (
                 <>
-                    <Register />
+                    <Register apiUrl={apiUrl} />
                     <p>Já tem uma conta? <span className="link-span" onClick={() => setAlrHaveAcc(false)}>Login</span></p>
                 </>
             ) : (
             <>
-                <Logar />
+                <Logar apiUrl={apiUrl} />
                 <p>Ainda não tem uma conta?<span className="link-span" onClick={() => setAlrHaveAcc(true)}>Registrar</span></p>
             </>
             )}

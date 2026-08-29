@@ -12,10 +12,7 @@ export default function Register({ apiUrl }) {
     const [isComposing, setIsComposing] = useState(false)
 
     const navigate = useNavigate()
-
-    // Enquanto o navegador está "compondo" um caractere acentuado
-    // (dead key + letra, ex: ´ + a = á), deixamos o valor passar sem
-    // filtrar. Só aplicamos o regex quando a composição termina.
+    
     const makeNameHandler = (setter) => ({
         onChange: (e) => {
             if (isComposing) {

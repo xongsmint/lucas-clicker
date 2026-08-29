@@ -1,5 +1,0 @@
-- ADICIONAR LOJA
-    - ADICIONAR AUTOCLICKER
-    - SKINS
-
-- Featura de lukinhas caindo no background.
