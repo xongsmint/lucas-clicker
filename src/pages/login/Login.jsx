@@ -6,11 +6,6 @@ import Cookies from 'js-cookie'
 import './Login.css'
 
 export default function Login() {
-    const [firstName, setFirstname] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-
     let navigate = useNavigate()
 
     useEffect(() => {
