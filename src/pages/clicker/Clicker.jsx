@@ -5,10 +5,6 @@ import Cookies from 'js-cookie'
 import './Clicker.css'
 
 export default function Clicker() {
-    // pendingRef guarda os cliques ainda não enviados ao servidor.
-    // Usar um ref evita o problema de "closure obsoleta": o setInterval
-    // lê pendingRef.current em tempo real, e não um valor "congelado"
-    // no momento em que o efeito foi criado.
     const pendingRef = useRef(0)
 
     const [clicks, setClicks] = useState(0)
