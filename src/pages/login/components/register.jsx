@@ -34,7 +34,6 @@ export default function Register() {
             if (response.ok) {
                 const data = await response.json()
                 Cookies.set('accessToken', data.access_token)
-                // console.log(Cookies.get('accessToken'))
                 navigate("/")
             } else {
                 alert("Não foi possível concluir o cadastro.")

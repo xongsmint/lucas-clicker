@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 export default function Logar() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -14,7 +15,8 @@ export default function Logar() {
         e.preventDefault()
 
         try {
-            // console.log("requesting")
+            setIsLoading(true)
+
             const response = await fetch(apiUrl + "/login", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
@@ -23,12 +25,10 @@ export default function Logar() {
                     password: password
                 })
             })
-            // console.log("requested")
 
             if (response.ok) {
                 const data = await response.json()
                 Cookies.set('accessToken', data.access_token)
-                // console.log(Cookies.get('accessToken'))
                 navigate("/")
             }
         } catch(err) {
@@ -65,8 +65,7 @@ export default function Logar() {
                 />
             </label>
             
-            <button
-                type="submit">ENTRAR</button>
+            <button type="submit" disabled={isLoading}>ENTRAR</button>
         </form>
     )
 }
