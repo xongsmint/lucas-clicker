@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import './Clicker.css'
 
-// Hook central: encapsula o "ritual" repetido de checar token,
-// criar AbortController, fazer fetch autenticado e limpar no unmount.
 function useAuthFetch(apiUrl, path, { onSuccess, onError, deps = [] }) {
     useEffect(() => {
         const accessToken = Cookies.get("accessToken")
