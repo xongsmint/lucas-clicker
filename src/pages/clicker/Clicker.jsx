@@ -4,25 +4,23 @@ import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import './Clicker.css'
 
-const FABIO_TIMEOUT_KEY = "fabioTimeoutUntil"
-
-function getTomorrowMidnight() {
-    const d = new Date()
-    d.setDate(d.getDate() + 1)
-    d.setHours(0, 0, 0, 0)
-    return d.getTime()
-}
-
-function isFabioTimedOut() {
-    const until = localStorage.getItem(FABIO_TIMEOUT_KEY)
-    if (!until) return false
-    return Number(until) > Date.now()
-}
-
 export default function Clicker({ apiUrl }) {
     const pendingRef = useRef(0)
 
-    const [clicks, setClicks] = useState(0)
+    const [clicks, setClicks] = useState(() => {
+        const saved = localStorage.getItem("clicks")
+        if (saved === null) return 0
+
+        let parsed
+        try {
+            parsed = JSON.parse(saved)
+        } catch {
+            return 0
+        }
+
+        const num = Number(parsed)
+        return Number.isInteger(num) ? num : 0
+    })
     const [multiplier, setMultiplier] = useState(1)
     const [username, setUsername] = useState(null)
 
@@ -110,18 +108,6 @@ export default function Clicker({ apiUrl }) {
         return () => controller.abort()
     }, [apiUrl])
 
-    // TIMEOUT FABIO (só dispara uma vez, quando ainda não tem punição ativa)
-    useEffect(() => {
-        if (username !== "fabio") return
-        if (isFabioTimedOut()) return // já está de castigo, não repete o alert
-
-        const until = getTomorrowMidnight()
-        localStorage.setItem(FABIO_TIMEOUT_KEY, String(until))
-
-        alert("sem apelar fabio")
-        window.location.reload()
-    }, [username])
-
     // PERIODICALLY FLUSH PENDING CLICKS TO THE SERVER
     useEffect(() => {
         if (!userLogged) return
@@ -156,8 +142,6 @@ export default function Clicker({ apiUrl }) {
     }, [apiUrl, userLogged])
 
     const increment = () => {
-        if (username === "fabio" && isFabioTimedOut()) return // bloqueado até amanhã
-
         pendingRef.current += 1 * multiplier
         setClicks(prev => prev + (1 * multiplier))
     }
