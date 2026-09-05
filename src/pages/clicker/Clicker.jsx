@@ -7,6 +7,7 @@ import './Clicker.css'
 export default function Clicker({ apiUrl }) {
     const pendingRef = useRef(0)
 
+    // CLICKS & LOCALSTORAGE
     const [clicks, setClicks] = useState(() => {
         const saved = localStorage.getItem("clicks")
         if (saved === null) return 0
@@ -21,7 +22,23 @@ export default function Clicker({ apiUrl }) {
         const num = Number(parsed)
         return Number.isInteger(num) ? num : 0
     })
-    const [multiplier, setMultiplier] = useState(1)
+
+    // MULTIPLIER & LOCAL STORAGE
+    const [multiplier, setMultiplier] = useState(() => {
+        const saved = localStorage.getItem("multiplier")
+        if (saved === null) return 1
+
+        let parsed
+        try {
+            parsed = JSON.parse(saved)
+        } catch {
+            return 1
+        }
+
+        const num = Number(parsed)
+        return Number.isInteger(num) && num > 0 ? num : 1
+    })
+
     const [username, setUsername] = useState(null)
 
     const [menuOpen, setMenuOpen] = useState(false)
@@ -31,6 +48,14 @@ export default function Clicker({ apiUrl }) {
     const [error, setError] = useState(null)
 
     const navigate = useNavigate()
+
+    useEffect(() => {
+        localStorage.setItem("clicks", JSON.stringify(clicks))
+    }, [clicks])
+
+    useEffect(() => {
+        localStorage.setItem("multiplier", JSON.stringify(multiplier))
+    }, [multiplier])
 
     // CHECK IF LOGGED AND FETCH CLICKS AND MULTIPLIER AT START
     useEffect(() => {
@@ -108,42 +133,57 @@ export default function Clicker({ apiUrl }) {
         return () => controller.abort()
     }, [apiUrl])
 
-    // PERIODICALLY FLUSH PENDING CLICKS TO THE SERVER
+    // flush periodico
     useEffect(() => {
         if (!userLogged) return
 
         const accessToken = Cookies.get("accessToken")
 
-        const id = setInterval(async () => {
-            const increment = pendingRef.current
-            if (increment === 0) return // nada pra enviar, evita POST vazio
+        const flush = async () => {
+            const rawClicks = pendingRef.current
+            if (rawClicks === 0) return
 
             try {
                 const response = await fetch(apiUrl + "/clicks", {
                     method: "POST",
                     headers: {
-                        "Content-type": "application/json",
+                        "Conten-type": "application/json",
                         "Authorization": `Bearer ${accessToken}`
                     },
-                    body: JSON.stringify({ increment })
+                    body: JSON.stringify({ clicks: rawClicks })
                 })
 
                 if (!response.ok) {
                     throw new Error(`Request failed with status ${response.status}`)
                 }
 
-                pendingRef.current -= increment
+                const data = await response.json()
+
+                setClicks(data.clicks)
+                setMultiplier(data.multiplier)
+
+                pendingRef.current -= rawClicks
             } catch (err) {
                 setError(err)
             }
-        }, 10_000) // 10s
+        }
 
-        return () => clearInterval(id)
+        const id = setInterval(flush, 10_000)
+
+        const onHide = () => {
+            if (document.visibilityState === "hidden") flush()
+        }
+        document.addEventListener("visibilitychange", onHide)
+
+        return () => {
+            clearInterval(id)
+            document.removeEventListener("visibilitychange", onHide)
+        }
     }, [apiUrl, userLogged])
 
     const increment = () => {
-        pendingRef.current += 1 * multiplier
-        setClicks(prev => prev + (1 * multiplier))
+        pendingRef.current += 1
+        setClicks(prev => prev + (1 * multiplier)) // visual
     }
 
     const copiar = async (text) => {
