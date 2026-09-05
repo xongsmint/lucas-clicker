@@ -36,7 +36,7 @@ export default function Register({ apiUrl }) {
 
             const response = await fetch(apiUrl + "/users", {
                 method: "POST",
-                headers: { "Content-type": "application/json" },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     first_name: firstName,
                     last_name: lastName,

@@ -1,8 +1,44 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import lucas from '../../assets/lukinhas.png'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import './Clicker.css'
+
+// Hook central: encapsula o "ritual" repetido de checar token,
+// criar AbortController, fazer fetch autenticado e limpar no unmount.
+function useAuthFetch(apiUrl, path, { onSuccess, onError, deps = [] }) {
+    useEffect(() => {
+        const accessToken = Cookies.get("accessToken")
+        if (!accessToken) return
+
+        const controller = new AbortController()
+
+        async function run() {
+            try {
+                const response = await fetch(apiUrl + path, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    signal: controller.signal
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`)
+                }
+
+                onSuccess(await response.json())
+            } catch (err) {
+                if (err.name !== "AbortError") onError?.(err)
+            }
+        }
+
+        run()
+        return () => controller.abort()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [apiUrl, path, ...deps])
+}
 
 export default function Clicker({ apiUrl }) {
     const pendingRef = useRef(0)
@@ -57,81 +93,34 @@ export default function Clicker({ apiUrl }) {
         localStorage.setItem("multiplier", JSON.stringify(multiplier))
     }, [multiplier])
 
-    // CHECK IF LOGGED AND FETCH CLICKS AND MULTIPLIER AT START
+    // marca userLogged assim que existir token
     useEffect(() => {
-        const accessToken = Cookies.get("accessToken")
-        if (!accessToken) return
+        setUserLogged(!!Cookies.get("accessToken"))
+    }, [])
 
-        setUserLogged(true)
-
-        const controller = new AbortController()
-
-        const fetchStats = async () => {
-            try {
-                setLoading(true)
-
-                const response = await fetch(apiUrl + "/stats", {
-                    method: "GET",
-                    headers: { "Authorization": `Bearer ${accessToken}` },
-                    signal: controller.signal,
-                })
-
-                if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`)
-                }
-
-                const json = await response.json()
-                setClicks(json.clicks)
-                setMultiplier(json.multiplier)
-            } catch (err) {
-                if (err.name !== "AbortError") {
-                    setError(err)
-                }
-            } finally {
-                setLoading(false)
-            }
+    // STATS (clicks + multiplier)
+    useAuthFetch(apiUrl, "/stats", {
+        onSuccess: (json) => {
+            setClicks(json.clicks)
+            setMultiplier(json.multiplier)
+            setLoading(false)
+        },
+        onError: (err) => {
+            setError(err)
+            setLoading(false)
         }
+    })
 
-        fetchStats()
-
-        return () => controller.abort()
-    }, [apiUrl])
-
-    // FETCH PROFILE (to know who's logged in)
+    // dispara o loading só quando existe token (evita loading eterno pra visitante)
     useEffect(() => {
-        const accessToken = Cookies.get("accessToken")
-        if (!accessToken) return
+        if (Cookies.get("accessToken")) setLoading(true)
+    }, [])
 
-        const controller = new AbortController()
-
-        async function fetchProfile() {
-            try {
-                const response = await fetch(apiUrl + "/profile", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${accessToken}`
-                    },
-                    signal: controller.signal
-                })
-
-                if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`)
-                }
-
-                const json = await response.json()
-                setUsername(json.username)
-            } catch (err) {
-                if (err.name !== "AbortError") {
-                    setError(err)
-                }
-            }
-        }
-
-        fetchProfile()
-
-        return () => controller.abort()
-    }, [apiUrl])
+    // PROFILE (username)
+    useAuthFetch(apiUrl, "/profile", {
+        onSuccess: (json) => setUsername(json.username),
+        onError: (err) => setError(err)
+    })
 
     // flush periodico
     useEffect(() => {
@@ -147,7 +136,7 @@ export default function Clicker({ apiUrl }) {
                 const response = await fetch(apiUrl + "/clicks", {
                     method: "POST",
                     headers: {
-                        "Conten-type": "application/json",
+                        "Content-Type": "application/json",
                         "Authorization": `Bearer ${accessToken}`
                     },
                     body: JSON.stringify({ clicks: rawClicks })
@@ -181,10 +170,10 @@ export default function Clicker({ apiUrl }) {
         }
     }, [apiUrl, userLogged])
 
-    const increment = () => {
+    const increment = useCallback(() => {
         pendingRef.current += 1
         setClicks(prev => prev + (1 * multiplier)) // visual
-    }
+    }, [multiplier])
 
     const copiar = async (text) => {
         try {
@@ -233,7 +222,6 @@ export default function Clicker({ apiUrl }) {
             <p>Clicks: {loading ? "-" : clicks}</p>
             <p>Click multiplier: {loading ? "-" : multiplier}</p>
             {userLogged ? "" : <p>Você não está logado! Jogar sem conta faz você correr o risco de perder os cliques e bloqueia os sistemas de skins e skills.</p>}
-            {username === "fabio" && isFabioTimedOut() ? <p style={{ color: "red" }}>Você está de castigo até amanhã 😤</p> : ""}
             {error ? <p style={{ color: "red" }}>Erro ao sincronizar: {error.message}</p> : ""}
 
             <pre

@@ -17,7 +17,7 @@ export default function Logar({ apiUrl }) {
 
             const response = await fetch(apiUrl + "/login", {
                 method: "POST",
-                headers: { "Content-type": "application/json" },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     username: username,
                     password: password
